@@ -166,22 +166,22 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button
-            className="md:hidden flex items-center justify-center"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "var(--color-text)",
-              padding: "0.5rem",
-              cursor: "pointer",
-              zIndex: 160, // Ensure it's above the drawer
-            }}
-          >
-            {mobileOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+          {!mobileOpen && (
+            <button
+              className="md:hidden flex items-center justify-center ml-auto"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "var(--color-text)",
+                padding: "0.5rem",
+                cursor: "pointer",
+              }}
+            >
+              <Menu size={28} />
+            </button>
+          )}
         </nav>
       </motion.header>
 
@@ -210,6 +210,30 @@ export default function Navbar() {
               boxShadow: "-10px 0 40px rgba(0,0,0,0.5)",
             }}
           >
+            {/* Close Button inside Drawer */}
+            <button
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
+              style={{
+                position: "absolute",
+                top: "1.5rem",
+                right: "clamp(1rem, 3vw, 3rem)",
+                background: "rgba(232, 68, 138, 0.1)",
+                border: "1px solid rgba(232, 68, 138, 0.2)",
+                color: "var(--color-text)",
+                width: "44px",
+                height: "44px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                zIndex: 160,
+              }}
+            >
+              <X size={24} />
+            </button>
+
             {/* Decorative background glow */}
             <div
               style={{
