@@ -66,7 +66,6 @@ export default function Navbar() {
             margin: "0 auto",
             padding: "0 clamp(1rem, 3vw, 3rem)",
             height: "72px",
-            display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
           }}
@@ -127,12 +126,11 @@ export default function Navbar() {
 
           {/* Desktop Nav Links */}
           <div
+            className="hidden md:flex"
             style={{
-              display: "flex",
               alignItems: "center",
               gap: "2rem",
             }}
-            className="hidden md:flex"
           >
             {navLinks.map((link) => (
               <Link
@@ -169,7 +167,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden"
+            className="md:hidden flex items-center justify-center"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -179,9 +177,10 @@ export default function Navbar() {
               color: "var(--color-text)",
               padding: "0.5rem",
               cursor: "pointer",
+              zIndex: 160, // Ensure it's above the drawer
             }}
           >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </nav>
       </motion.header>
@@ -193,57 +192,118 @@ export default function Navbar() {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            transition={{ type: "spring", damping: 30, stiffness: 250 }}
             style={{
               position: "fixed",
               top: 0,
               right: 0,
               bottom: 0,
               width: "100%",
-              maxWidth: "400px",
-              background: "var(--color-surface)",
+              maxWidth: "100vw", // Full screen on very small devices
+              background: "var(--color-bg)",
               zIndex: 150,
               padding: "6rem 2rem 2rem",
               display: "flex",
               flexDirection: "column",
-              gap: "0.5rem",
+              gap: "1.5rem",
+              borderLeft: "1px solid rgba(232, 68, 138, 0.15)",
+              boxShadow: "-10px 0 40px rgba(0,0,0,0.5)",
             }}
           >
-            {navLinks.map((link, i) => (
-              <motion.div
-                key={link.href}
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 + i * 0.05 }}
-              >
-                <Link
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "2rem",
-                    fontWeight: 600,
-                    color: "var(--color-text)",
-                    textDecoration: "none",
-                    display: "block",
-                    padding: "0.75rem 0",
-                    borderBottom: "1px solid var(--color-divider)",
-                  }}
+            {/* Decorative background glow */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "200px",
+                height: "200px",
+                background: "radial-gradient(circle, rgba(232,68,138,0.15) 0%, transparent 70%)",
+                pointerEvents: "none",
+                zIndex: -1,
+              }}
+            />
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.05 }}
                 >
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
+                  <Link
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "2rem",
+                      fontWeight: 600,
+                      color: "var(--color-text)",
+                      textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "1rem 0",
+                      borderBottom: "1px solid rgba(232, 68, 138, 0.1)",
+                    }}
+                  >
+                    {link.label}
+                    <span style={{ color: "var(--color-accent)", fontSize: "1.5rem", opacity: 0.5 }}>→</span>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              style={{ marginTop: "2rem" }}
+              style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "1rem" }}
             >
-              <MagneticButton variant="primary" href="/for-employers">
-                Hire Now →
-              </MagneticButton>
+              <Link
+                href="/for-employers"
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  padding: "1rem",
+                  background: "var(--color-accent)",
+                  color: "#fff",
+                  borderRadius: "var(--radius-full)",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 600,
+                  fontSize: "1rem",
+                  textDecoration: "none",
+                  textAlign: "center",
+                }}
+              >
+                Hire South African Talent
+              </Link>
+              <Link
+                href="/for-talent"
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  padding: "1rem",
+                  background: "transparent",
+                  border: "1px solid var(--color-border)",
+                  color: "var(--color-text)",
+                  borderRadius: "var(--radius-full)",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 600,
+                  fontSize: "1rem",
+                  textDecoration: "none",
+                  textAlign: "center",
+                }}
+              >
+                Join as Talent
+              </Link>
             </motion.div>
           </motion.div>
         )}
@@ -260,7 +320,8 @@ export default function Navbar() {
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(0,0,0,0.6)",
+              background: "rgba(8, 5, 10, 0.8)",
+              backdropFilter: "blur(4px)",
               zIndex: 140,
             }}
           />
