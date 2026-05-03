@@ -67,7 +67,7 @@ function PulsingPoint({
           position: "absolute",
           inset: isOrigin ? -12 : -8,
           borderRadius: "50%",
-          border: `2px solid ${isOrigin ? "#E8448A" : "rgba(232, 68, 138, 0.6)"}`,
+          border: `2px solid rgba(255, 255, 255, 0.4)`,
         }}
         animate={{ scale: [1, 2.5, 2.5], opacity: [0.8, 0, 0] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
@@ -77,24 +77,24 @@ function PulsingPoint({
           position: "absolute",
           inset: isOrigin ? -12 : -8,
           borderRadius: "50%",
-          border: `1.5px solid ${isOrigin ? "#E8448A" : "rgba(232, 68, 138, 0.4)"}`,
+          border: `1.5px solid rgba(255, 255, 255, 0.2)`,
         }}
         animate={{ scale: [1, 3, 3], opacity: [0.5, 0, 0] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.7 }}
       />
 
       {/* Core dot */}
-      <div
+      <motion.div
         style={{
           width: isOrigin ? 14 : 10,
           height: isOrigin ? 14 : 10,
           borderRadius: "50%",
-          background: isOrigin
-            ? "radial-gradient(circle, #FF5FA0, #E8448A)"
-            : "radial-gradient(circle, #FF5FA0, #E8448A)",
-          boxShadow: `0 0 ${isOrigin ? 20 : 12}px rgba(232, 68, 138, 0.6)`,
+          background: "#FFFFFF",
+          boxShadow: `0 0 ${isOrigin ? 20 : 12}px rgba(255, 255, 255, 0.8)`,
           position: "relative",
         }}
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* Label */}
