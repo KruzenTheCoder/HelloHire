@@ -3,6 +3,8 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CustomCursor from "@/components/layout/CustomCursor";
+import ScrollProgress from "@/components/layout/ScrollProgress";
+import SmoothScroll from "@/components/layout/SmoothScroll";
 
 export const metadata: Metadata = {
   title: {
@@ -82,8 +84,10 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <a href="#main-content" className="skip-link">
           Skip to content
+        <SmoothScroll />
         </a>
         <CustomCursor />
+        <ScrollProgress />
         <Navbar />
         <main id="main-content">{children}</main>
         <Footer />

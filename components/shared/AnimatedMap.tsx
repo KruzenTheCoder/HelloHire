@@ -48,6 +48,9 @@ function PulsingPoint({
   label: string;
   isOrigin?: boolean;
 }) {
+  const coreSize = isOrigin ? 16 : 9;
+  const accent = "#E8448A";
+
   return (
     <motion.div
       style={{
@@ -61,39 +64,71 @@ function PulsingPoint({
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay, duration: 0.5, type: "spring", stiffness: 300, damping: 20 }}
     >
-      {/* Outer pulse rings */}
+      {/* Outer radial halo (origin only) */}
+      {isOrigin && (
+        <div
+          style={{
+            position: "absolute",
+            inset: -40,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, rgba(232,68,138,0.45) 0%, rgba(232,68,138,0.15) 40%, transparent 70%)",
+            pointerEvents: "none",
+          }}
+        />
+      )}
+
+      {/* Continuous pulse rings */}
       <motion.div
         style={{
           position: "absolute",
-          inset: isOrigin ? -12 : -8,
+          left: "50%",
+          top: "50%",
+          width: coreSize,
+          height: coreSize,
+          marginLeft: -coreSize / 2,
+          marginTop: -coreSize / 2,
           borderRadius: "50%",
-          border: `2px solid rgba(255, 255, 255, 0.4)`,
+          border: `1.5px solid ${accent}`,
         }}
-        animate={{ scale: [1, 2.5, 2.5], opacity: [0.8, 0, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+        animate={{
+          scale: [1, isOrigin ? 5 : 3.2, isOrigin ? 5 : 3.2],
+          opacity: [0.75, 0, 0],
+        }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
       />
       <motion.div
         style={{
           position: "absolute",
-          inset: isOrigin ? -12 : -8,
+          left: "50%",
+          top: "50%",
+          width: coreSize,
+          height: coreSize,
+          marginLeft: -coreSize / 2,
+          marginTop: -coreSize / 2,
           borderRadius: "50%",
-          border: `1.5px solid rgba(255, 255, 255, 0.2)`,
+          border: `1px solid ${accent}`,
         }}
-        animate={{ scale: [1, 3, 3], opacity: [0.5, 0, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.7 }}
+        animate={{
+          scale: [1, isOrigin ? 7 : 4.5, isOrigin ? 7 : 4.5],
+          opacity: [0.5, 0, 0],
+        }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut", delay: 0.9 }}
       />
 
-      {/* Core dot */}
+      {/* Core dot — white centre, accent glow */}
       <motion.div
         style={{
-          width: isOrigin ? 14 : 10,
-          height: isOrigin ? 14 : 10,
+          width: coreSize,
+          height: coreSize,
           borderRadius: "50%",
-          background: "#FFFFFF",
-          boxShadow: `0 0 ${isOrigin ? 20 : 12}px rgba(255, 255, 255, 0.8)`,
+          background: `radial-gradient(circle, #FFFFFF 0%, #FFFFFF 40%, ${accent} 100%)`,
+          boxShadow: isOrigin
+            ? `0 0 ${coreSize * 2.2}px ${accent}, 0 0 ${coreSize}px #FFFFFF`
+            : `0 0 ${coreSize * 1.6}px ${accent}, 0 0 ${coreSize * 0.6}px rgba(255,255,255,0.9)`,
           position: "relative",
         }}
-        animate={{ scale: [1, 1.2, 1] }}
+        animate={{ scale: [1, 1.25, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       />
 
@@ -137,6 +172,9 @@ function ConnectionLine({
 
   const path = `M ${from.x} ${from.y} Q ${midX} ${midY} ${to.x} ${to.y}`;
 
+  // Unique filter id so multiple instances don't collide
+  const filterId = `arc-glow-${Math.round(from.x * 100)}-${Math.round(to.x * 100)}-${Math.round(to.y * 100)}`;
+
   return (
     <svg
       viewBox="0 0 100 100"
@@ -148,42 +186,68 @@ function ConnectionLine({
         height: "100%",
         pointerEvents: "none",
         zIndex: 5,
+        overflow: "visible",
       }}
     >
-      {/* Glow path */}
+      <defs>
+        <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="0.6" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Soft glow trail (wide, blurred) */}
       <motion.path
         d={path}
         fill="none"
-        stroke="rgba(232, 68, 138, 0.15)"
-        strokeWidth="0.4"
+        stroke="rgba(232, 68, 138, 0.45)"
+        strokeWidth="0.9"
+        strokeLinecap="round"
+        filter={`url(#${filterId})`}
         initial={{ pathLength: 0, opacity: 0 }}
         whileInView={{ pathLength: 1, opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 1.8, delay, ease: "easeInOut" }}
+        transition={{ duration: 2.2, delay, ease: [0.22, 1, 0.36, 1] }}
       />
-      {/* Main line */}
+      {/* Crisp dashed line on top */}
       <motion.path
         d={path}
         fill="none"
         stroke="#E8448A"
-        strokeWidth="0.15"
-        strokeDasharray="0.8 0.4"
+        strokeWidth="0.18"
+        strokeLinecap="round"
+        strokeDasharray="0.9 0.5"
         initial={{ pathLength: 0, opacity: 0 }}
-        whileInView={{ pathLength: 1, opacity: 0.8 }}
+        whileInView={{ pathLength: 1, opacity: 0.95 }}
         viewport={{ once: true }}
-        transition={{ duration: 1.8, delay, ease: "easeInOut" }}
+        transition={{ duration: 2.2, delay, ease: [0.22, 1, 0.36, 1] }}
       />
-      {/* Traveling dot */}
+      {/* Travelling packet — loops forever once arc has drawn */}
       <motion.circle
-        r="0.4"
-        fill="#FF5FA0"
-        style={{ filter: "drop-shadow(0 0 2px #E8448A)" }}
+        r="0.45"
+        fill="#FFFFFF"
+        filter={`url(#${filterId})`}
+        style={{ filter: "drop-shadow(0 0 1.2px #FF5FA0)" }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: [0, 1, 1, 0] }}
         viewport={{ once: true }}
-        transition={{ duration: 2, delay: delay + 0.5, ease: "easeInOut" }}
+        transition={{
+          duration: 2.8,
+          delay: delay + 1.2,
+          repeat: Infinity,
+          repeatDelay: 1.2,
+          ease: "easeInOut",
+        }}
       >
-        <animateMotion dur="2.5s" begin={`${delay + 0.5}s`} repeatCount="indefinite" path={path} />
+        <animateMotion
+          dur="2.8s"
+          begin={`${delay + 1.2}s`}
+          repeatCount="indefinite"
+          path={path}
+        />
       </motion.circle>
     </svg>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import MagneticButton from "@/components/shared/MagneticButton";
 import { SplitText, GradientWipe, LineReveal } from "@/components/shared/TextReveal";
@@ -126,21 +126,28 @@ export default function HeroSection() {
       }}
       aria-labelledby="hero-heading"
     >
-      {/* Background Animated Map */}
+      {/* Background Animated Map — same configuration as the global-reach map below */}
       <motion.div
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "100vw",
-          height: "100vh",
+          width: "min(1400px, 110vw)",
           zIndex: 0,
-          opacity: 0.4, // Subtle opacity so text stands out
-          pointerEvents: "none", // Prevent interaction
+          opacity: 0.55,
+          pointerEvents: "none",
+          x: "-50%",
+          y: "-50%",
+          maskImage:
+            "radial-gradient(ellipse at center, black 45%, transparent 85%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at center, black 45%, transparent 85%)",
         }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.55 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       >
-        <AnimatedMap variant="hero" showLabels={false} />
+        <AnimatedMap showLabels={false} />
       </motion.div>
 
       <ParticleField />
