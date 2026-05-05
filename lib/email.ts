@@ -1,10 +1,10 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
 
 export async function sendResumeConfirmation(email: string, name: string) {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn("RESEND_API_KEY not set. Skipping email send.");
+  if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === "re_placeholder") {
+    console.warn("RESEND_API_KEY not set or is placeholder. Skipping email send.");
     return { success: true };
   }
 
