@@ -7,11 +7,13 @@ import Link from "next/link";
 import MagneticButton from "@/components/shared/MagneticButton";
 
 const navLinks = [
-  { label: "For Employers", href: "/for-employers" },
-  { label: "For Talent", href: "/for-talent" },
-  { label: "How It Works", href: "/how-it-works" },
+  { label: "Employers", href: "/for-employers" },
+  { label: "Talent", href: "/for-talent" },
+  { label: "Resume", href: "/resume-review" },
+  { label: "Coaching", href: "/book" },
+  { label: "Membership", href: "/membership" },
+  { label: "Process", href: "/how-it-works" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
